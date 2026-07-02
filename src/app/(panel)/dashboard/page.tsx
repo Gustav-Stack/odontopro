@@ -1,7 +1,15 @@
-export default function dashboard(){
-    return(
-        <>
+import getSession from "@/lib/getSession";
+import { redirect } from "next/navigation";
+
+export default async function Dashboard() {
+    const session = await getSession();
+
+    if (!session) {
+        redirect("/");
+    }
+
+
+    return (
         <h1>Página Dashboard</h1>
-        </>
-    )
+    );
 }

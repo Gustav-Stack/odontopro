@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Outfit, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { SessionAuthProvider } from "@/components/session-auth";
+import {Toaster } from "sonner";
 
 // Fonte para Títulos (Moderna, geométrica e amigável)
 const outfit = Outfit({
@@ -35,7 +37,14 @@ export default function RootLayout({
       lang="en"
       className={`${plusJakarta.variable} ${outfit.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+         <SessionAuthProvider>
+          <Toaster
+          duration={2500}
+          />
+          {children}
+          </SessionAuthProvider>
+      </body>
     </html>
   );
 }
