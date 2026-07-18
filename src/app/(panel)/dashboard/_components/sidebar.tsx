@@ -26,7 +26,7 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  console.log(pathname);
+  // console.log(pathname);
   return (
     <div className="flex min-h-screen w-full">
         <aside 

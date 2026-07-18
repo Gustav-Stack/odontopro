@@ -11,7 +11,7 @@ export default async function scheludePage({
     const userId = (await params).id
 
     const user = await getInfoSchedule({userId:userId});
-    console.log(user)
+    // console.log(user)
 
       if(!user){
             redirect("/")

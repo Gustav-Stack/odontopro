@@ -56,7 +56,7 @@ const fetchBlockedTimes = useCallback(async (date: Date): Promise<string[]> =>{
 
         try{
             const dateString = date.toISOString().split("T")[0]
-            console.log(dateString);
+            // console.log(dateString);
             const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/schedule/get-appointments?userId=${clinic.id}&date=${dateString}`)
             const json = await response.json();
             setLoadingSlots(false);
@@ -72,8 +72,8 @@ useEffect(()=>{
         if(selectedDate){
             fetchBlockedTimes(selectedDate).then((blocked)=>{
                 setBlockedTimes(blocked)
-                 console.log("blocked:", blocked)
-    console.log("clinic.times:", clinic.times)
+                //  console.log("blocked:", blocked)
+    // console.log("clinic.times:", clinic.times)
                 const times = clinic.times || [];
 
                 const finalSlots = times.map((time)=>(
@@ -243,7 +243,7 @@ return(
                control={form.control}
   name="serviceId"
   render={({ field }) => {
-    console.log("RENDER field.value:", JSON.stringify(field.value), typeof field.value);
+    // console.log("RENDER field.value:", JSON.stringify(field.value), typeof field.value);
     return (
       <FormItem>
         <FormLabel className="font-semibold">Selecione o serviço:</FormLabel>
@@ -251,7 +251,7 @@ return(
           <Select
             value={field.value}
             onValueChange={(value) => {
-              console.log("onValueChange disparou com:", JSON.stringify(value), typeof value);
+            //   console.log("onValueChange disparou com:", JSON.stringify(value), typeof value);
               field.onChange(value);
             }}
           >
@@ -260,7 +260,7 @@ return(
             </SelectTrigger>
             <SelectContent>
               {clinic.services.map((service) => {
-                console.log("SelectItem value:", JSON.stringify(service.id), typeof service.id);
+                // console.log("SelectItem value:", JSON.stringify(service.id), typeof service.id);
                 return (
                   <SelectItem key={service.id} value={service.id}>
                     {service.name} ({Math.floor(service.duration / 60)}h {service.duration % 60}min)

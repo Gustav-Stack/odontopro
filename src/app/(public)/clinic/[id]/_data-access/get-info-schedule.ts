@@ -7,7 +7,7 @@ export async function getInfoSchedule({ userId }: { userId: string }) {
     if (!userId) {
       return null;
     }
-    console.log("userId", userId);
+    // console.log("userId", userId);
     const user = await prisma.user.findFirst({
       where: {
         id: userId,
