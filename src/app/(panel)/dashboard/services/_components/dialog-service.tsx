@@ -26,9 +26,11 @@ export function DialogService({closeModal, initialValues, serviceId} : DialogSer
 
     const [loading, setLoading] = useState(false);
 
-
+//aqui e pra salvar em cache os dados que foram passado no form pra eles serem mostrados
  const form = useDialogServiceForm({initialValues: initialValues})
 
+
+ //função para editar e cadastrar
 async function onSubmit(values: DialogServiceFormData){
     setLoading(true);
     const priceInCents = convertRealToCents(values.price)
@@ -37,6 +39,7 @@ async function onSubmit(values: DialogServiceFormData){
 
     const duration = (hours * 60) + minutes;
 
+    //caso tenha serviço chama o editServiceById
     if(serviceId){
         await editServiceById({
             serviceId: serviceId,
@@ -75,7 +78,7 @@ async function editServiceById({
   priceInCents: number;
   duration: number;
 }) {
-
+    //chama o action
     const response = await updateService({
         serviceId: serviceId,
         name: name,
@@ -101,7 +104,7 @@ function handleCloseModal(){
     
 }
 
-
+//função para chamar de centavos para reais
 function changeCurrency(event: React.ChangeEvent<HTMLInputElement>){
         let {value} = event.target;
 
@@ -141,7 +144,10 @@ function changeCurrency(event: React.ChangeEvent<HTMLInputElement>){
                                 Nome do serviço:
                             </FormLabel>
                             <FormControl>
-                                <Input {...field} placeholder="Digite o nome do serviço..."/>
+                                
+                                <Input 
+                                // o ...field serve para pegar os dados que mandamos para o form
+                                {...field} placeholder="Digite o nome do serviço..."/>
                             </FormControl>
                             <FormMessage/>
                         </FormItem>

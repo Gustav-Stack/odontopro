@@ -1,0 +1,29 @@
+"use server";
+
+import prisma from "@/lib/prisma";
+
+export async function getInfoSchedule({ userId }: { userId: string }) {
+  try {
+    if (!userId) {
+      return null;
+    }
+    console.log("userId", userId);
+    const user = await prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+      include: {
+        subscription: true,
+        services: {
+          where: {
+            status: true,
+          },
+        },
+      },
+    });
+
+    return user;
+  } catch (err) {
+    console.log(err);
+  }
+}

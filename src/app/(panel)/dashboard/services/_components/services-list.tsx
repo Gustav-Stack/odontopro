@@ -22,6 +22,8 @@ export function ServiceList({services}: ServiceListProps){
 const [isDialogOpen, setIsDialogOpen] = useState(false)
 const [editingService, setEditingService] = useState<null | Service>(null)
 
+
+//chama função do servidor para deletar o serviço
 async function handleDeleteService(serviceId: string){
     const response = await deleteService({serviceId: serviceId})
        if(response.error){
@@ -31,15 +33,15 @@ async function handleDeleteService(serviceId: string){
     toast.success("Serviço deletado com sucesso")
 }
 
+
+//atualiza o useState e abre a caixa de dialogo
 function handleEditService(service: Service){
-    
     setEditingService(service);
     setIsDialogOpen(true);
 }
 
     return(
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            
         <section className="mx=auto">
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -50,17 +52,22 @@ function handleEditService(service: Service){
                         </Button>
                     </DialogTrigger>
                     <DialogContent
+                    //Impede que o formulario salve cache quando clica fora dele
                     onInteractOutside={(e)=>{
                         e.preventDefault();
                         setIsDialogOpen(false);
                         setEditingService(null)
                     }}
                     >
+
                         <DialogService
                         closeModal={()=>{
+
                             setIsDialogOpen(false);
+                            //limpa cache do editing
                             setEditingService(null);
                         }}
+                        //verifica se tem cache no editing service que e chamado mais abaixo
                         serviceId={editingService ? editingService.id : undefined}
                         initialValues={editingService ?{
                             name: editingService.name,
@@ -91,6 +98,7 @@ function handleEditService(service: Service){
                                         variant="ghost"
                                         size="icon"
                                         onClick={(()=>{
+                                            //chama ação de edição
                                             handleEditService(services)
                                         })}
                                         >
