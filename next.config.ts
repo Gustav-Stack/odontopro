@@ -1,16 +1,20 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactCompiler: true,
-  images:{
+
+  images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'avatars.githubusercontent.com',
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
       },
     ],
-  }
+  },
+
+  turbopack: {
+    root: "C:\\Users\\gustavo\\Documents\\Gustavo\\Course\\Web development\\saas\\odontopro",
+  },
 };
 
 export default nextConfig;

@@ -58,6 +58,8 @@ export async function GET(request: NextRequest) {
         }
 
         const blockedTimes = Array.from(blockedSlots);
+
+        console.log("Blocked Times:", blockedTimes);
         return NextResponse.json(blockedTimes)
 
         

@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button"
 import { useCallback, useEffect, useState } from "react"
 import { Label } from "@/components/ui/label"
 import { ScheduleTimeList } from "./schedule-time-list"
-import { createNewAppointment } from "../_actions/create-appointmensts"
+import { createNewAppointment } from "../_actions/create-appointment"
 import { toast } from "sonner"
 
 type UserWithServiceAndSubscription = Prisma.UserGetPayload<{
@@ -49,44 +49,71 @@ export function ScheduleContent({clinic}: ScheduleContentProps){
 
     const [blockedTimes, setBlockedTimes] = useState<string[]>([])
 
-
-
-const fetchBlockedTimes = useCallback(async (date: Date): Promise<string[]> =>{
-    setLoadingSlots(true);
-
-        try{
-            const dateString = date.toISOString().split("T")[0]
-            // console.log(dateString);
-            const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/schedule/get-appointments?userId=${clinic.id}&date=${dateString}`)
-            const json = await response.json();
-            setLoadingSlots(false);
-            return json;
-        }catch(err){
-            setLoadingSlots(false);
-            return [];
-        }
-},[clinic.id])
-
-
-useEffect(()=>{
-        if(selectedDate){
-            fetchBlockedTimes(selectedDate).then((blocked)=>{
-                setBlockedTimes(blocked)
-                //  console.log("blocked:", blocked)
-    // console.log("clinic.times:", clinic.times)
-                const times = clinic.times || [];
-
-                const finalSlots = times.map((time)=>(
-
-                    {
-                        time: time,
-                        available: !blocked.includes(time)
-                    }
-                ))
-                setAvailableSlots(finalSlots)
+    useEffect(() => {
+        if (!selectedDate) {
+            form.setValue("date", new Date(), {
+                shouldDirty: false,
+                shouldValidate: true,
             })
         }
-    },[selectedDate, clinic.times, fetchBlockedTimes, selectedTime])
+    }, [selectedDate, form])
+
+    const fetchBlockedTimes = useCallback(async (date: Date): Promise<string[]> => {
+        setLoadingSlots(true)
+
+        try {
+            const dateString = date.toISOString().split("T")[0]
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_URL}/api/schedule/get-appointments?userId=${clinic.id}&date=${dateString}`,
+                { cache: "no-store" }
+            )
+
+            if (!response.ok) {
+                throw new Error(`Erro ao buscar horários: ${response.status}`)
+            }
+
+            const json = await response.json()
+            return Array.isArray(json) ? json : []
+        } catch (err) {
+            console.error("Erro ao carregar horários:", err)
+            return []
+        } finally {
+            setLoadingSlots(false)
+        }
+    }, [clinic.id])
+
+    useEffect(() => {
+        if (!selectedDate) return
+
+        let cancelled = false
+
+        fetchBlockedTimes(selectedDate).then((blocked) => {
+            if (cancelled) return
+
+            setBlockedTimes(blocked)
+
+            const times = clinic.times || []
+
+            const finalSlots = times.map((time) => ({
+                time,
+                available: !blocked.includes(time),
+            }))
+
+            const stillAvalible = finalSlots.find(
+                (slot) => slot.time === selectedTime && slot.available
+            )
+
+            if (!stillAvalible) {
+                setSelectedTime("")
+            }
+
+            setAvailableSlots(finalSlots)
+        })
+
+        return () => {
+            cancelled = true
+        }
+    }, [selectedDate, clinic.times, fetchBlockedTimes, selectedTime])
 
 
 
@@ -109,6 +136,8 @@ useEffect(()=>{
             return;
         }
         toast.success("Consulta agenda com sucesso");
+        form.reset();
+        setSelectedTime("");
     }
     
 
@@ -229,6 +258,7 @@ return(
                             onChange={(date)=>{
                                 if(date){
                                     field.onChange(date)
+                                    setSelectedTime("")
                                 }
                             }}
                             />
@@ -253,6 +283,7 @@ return(
             onValueChange={(value) => {
             //   console.log("onValueChange disparou com:", JSON.stringify(value), typeof value);
               field.onChange(value);
+              setSelectedTime("");
             }}
           >
             <SelectTrigger className="w-full">
