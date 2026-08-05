@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-
+import path from 'path'
 const nextConfig: NextConfig = {
   reactCompiler: true,
 
@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
   },
 
   turbopack: {
-    root: "C:\\Users\\gustavo\\Documents\\Gustavo\\Course\\Web development\\saas\\odontopro",
+  root: path.resolve(__dirname),  
   },
 };
 
