@@ -3,6 +3,7 @@ import { Outfit, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { SessionAuthProvider } from "@/components/session-auth";
 import {Toaster } from "sonner";
+import { QueryClientContext } from "@/providers/queryclient";
 
 // Fonte para Títulos (Moderna, geométrica e amigável)
 const outfit = Outfit({
@@ -39,10 +40,12 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
          <SessionAuthProvider>
+          <QueryClientContext>
           <Toaster
           duration={2500}
           />
           {children}
+          </QueryClientContext>
           </SessionAuthProvider>
       </body>
     </html>
