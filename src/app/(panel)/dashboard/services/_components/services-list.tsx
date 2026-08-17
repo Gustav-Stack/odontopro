@@ -10,18 +10,25 @@ import { Service } from "@/generated/prisma/client"
 import { formatCurrency } from "@/utils/formatCurrency"
 import { deleteService } from "../_actions/delete-service"
 import { toast } from "sonner"
+import { ResultPermissionProps } from "@/utils/permissions/canPermission"
+import Link from "next/link"
 
 
 
 interface ServiceListProps{
-    services: Service[]
+    services: Service[];
+    permission: ResultPermissionProps;
 }
 
-export function ServiceList({services}: ServiceListProps){
+export function ServiceList({services, permission}: ServiceListProps){
+
+
 
 const [isDialogOpen, setIsDialogOpen] = useState(false)
 const [editingService, setEditingService] = useState<null | Service>(null)
 
+
+const servicesList = permission.hasPermission ? services : services.slice(0, 3);
 
 //chama função do servidor para deletar o serviço
 async function handleDeleteService(serviceId: string){
@@ -54,11 +61,23 @@ function handleEditService(service: Service){
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     < CardTitle className="text-xl md:text-2xl font-bold">Serviços</CardTitle>
-                    <DialogTrigger asChild>
+                        
+                    {permission.hasPermission &&(
+                        <DialogTrigger asChild>
                         <Button>
                             <Plus className="w-4 h-4"/>
                         </Button>
                     </DialogTrigger>
+                    )}
+
+                    {!permission.hasPermission &&(
+                        <Link href="/dashboard/plans" className="text-sm text-red-500 hover:underline">
+                        Limite de serviços atingido
+                        </Link>
+                        
+                        )}
+
+
                     <DialogContent
                     //Impede que o formulario salve cache quando clica fora dele
                     onInteractOutside={(e)=>{
@@ -89,7 +108,7 @@ function handleEditService(service: Service){
                 </CardHeader>
                 <CardContent>
                     <section className="space-y-4 mt-5">
-                            {services.map(services =>(
+                            {servicesList.map(services =>(
                                 <article 
                                 key={services.id}
                                 className="flex items-center justify-between"

@@ -17,7 +17,7 @@ interface User{
     adress: string;
     phone?: string;
     status: boolean;
-    createdAt: String;
-    updatedAt: String;
+    createdAt: string;
+    updatedAt: string;
 
 }
