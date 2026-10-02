@@ -1,5 +1,5 @@
 import { SidebarDashboard } from "./_components/sidebar";
-
+import { Providers } from "@/app/providers";
 export default function DashboardLayout({
   children,
 }: {
@@ -7,7 +7,9 @@ export default function DashboardLayout({
 }) {
   return (
     <>
+    <Providers>
       <SidebarDashboard>{children}</SidebarDashboard>
+      </Providers>
     </>
   );
 }

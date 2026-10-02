@@ -57,7 +57,7 @@ function handleEditService(service: Service){
                     setEditingService(null)
                 }}
           }>
-        <section className="mx=auto">
+        <section className="mx-auto">
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     < CardTitle className="text-xl md:text-2xl font-bold">Serviços</CardTitle>
