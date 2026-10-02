@@ -109,7 +109,7 @@ export function AvatarProfile({avatarUrl, userId}: AvatarProfileProps){
                 <input
                 onChange={handleChange}
                 type="file"
-                className="cursos-pointer relative z-50 w-48 h-48 opacity-0"/>
+                className="cursor-pointer relative z-50 w-48 h-48 opacity-0"/>
             </div>
             
             {previewImage ? (

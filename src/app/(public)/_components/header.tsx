@@ -27,7 +27,7 @@ export function Header() {
   ];
 
   async function handleLogin() {
-    await handleRegister("google");
+    await handleRegister("github");
   }
 
   const NavLinks = () => (
