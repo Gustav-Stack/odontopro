@@ -3,13 +3,17 @@ import Image from "next/image";
 import fotoImg from "../../../../public/foto1.png";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { User } from "@/generated/prisma/client";
+import { Prisma } from "@/generated/prisma/client";
+import { PremiumCardBadge } from "./premium-badge";
 
 
 
+type UserWithSubscription = Prisma.UserGetPayload<{
+  include: { subscription: true }
+}>;
 
 interface ProfessionalsProps {
-  professionals: User[]
+  professionals: UserWithSubscription[]
 }
 export function Professionals({ professionals }: ProfessionalsProps) {
   return (
@@ -29,20 +33,28 @@ export function Professionals({ professionals }: ProfessionalsProps) {
                     alt="Foto da Clinica"
                     fill
                     className="object-cover"
-                  ></Image>
+                  />
+                  {clinic.subscription?.status === "active" && clinic.subscription?.plan === "PROFESSIONAL" && (
+                    <PremiumCardBadge />
+                  )}
+
+
                 </div>
-                <div className="p-4 space-y-4">
+                <div className="p-4 space-y-4 min-h-[160px] flex flex-col justify-between">
                     <div className="flex items-center justify-between">
                         <div>
                         <h3 className="font-semibold">
                             {clinic.name}
                         </h3>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-500 line-clamp-2">
                             {clinic.address ?? "Endereço não disponível"}
                         </p>
+                        
 
                     </div>
-                    <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full"></div>
+                    
+
+                
                     </div>
                     <Link href={`clinic/${clinic.id}`}
                     target="_blank"
